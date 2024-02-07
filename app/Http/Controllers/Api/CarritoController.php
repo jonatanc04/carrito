@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class CarritoController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api',
+        ['except' => ['index', 'show']]);
+    }
     /**
      * Display a listing of the resource.
      *
