@@ -19,10 +19,10 @@ class CarritoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $carrito = Carrito::get();
-        return response()->json($carrito, 200);
+        $carrito = Carrito::get()->where('idCliente', $request->idCliente);
+        return response()->json($carrito);
     }
 
     /**
@@ -33,14 +33,24 @@ class CarritoController extends Controller
      */
     public function store(Request $request)
     {
-        $carrito = new Carrito();
-        $carrito->idCliente = $request->idCliente;
-        $carrito->idProducto = $request->idProducto;
-        $carrito->cantidad = $request->cantidad;
-        $carrito->save();
+        $carritoExistente = Carrito::where('idCliente', $request->idCliente)->where('idProducto', $request->idProducto)->first();
 
-        return response()->json($carrito, 201);
+        if ($carritoExistente) {
+            $carritoExistente->cantidad += $request->cantidad;
+            $carritoExistente->save();
+            
+            return response()->json($carritoExistente, 200);
+        } else {
+            $carrito = new Carrito();
+            $carrito->idCliente = $request->idCliente;
+            $carrito->idProducto = $request->idProducto;
+            $carrito->cantidad = $request->cantidad;
+            $carrito->save();
+
+            return response()->json($carrito, 201);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -60,8 +70,9 @@ class CarritoController extends Controller
      * @param  \App\Models\Carrito  $carrito
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Carrito $carrito)
+    public function update(Request $request, $id)
     {
+        $carrito = Carrito::find($id);
         $carrito->idCliente = $request->idCliente;
         $carrito->idProducto = $request->idProducto;
         $carrito->cantidad = $request->cantidad;
