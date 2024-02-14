@@ -73,8 +73,6 @@ class CarritoController extends Controller
     public function update(Request $request, $id)
     {
         $carrito = Carrito::find($id);
-        $carrito->idCliente = $request->idCliente;
-        $carrito->idProducto = $request->idProducto;
         $carrito->cantidad = $request->cantidad;
         $carrito->save();
 
@@ -87,8 +85,9 @@ class CarritoController extends Controller
      * @param  \App\Models\Carrito  $carrito
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Carrito $carrito)
+    public function destroy($id)
     {
+        $carrito = Carrito::find($id);
         $carrito->delete();
         return response()->json($carrito);
     }
