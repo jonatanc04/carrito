@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('carrito', CarritoController::class);
+Route::middleware(['auth:api'])->group(function () {
+    Route::delete('carrito/confirmarPedido/{idCarrito}', [CarritoController::class, 'confirmarPedido']);
+});

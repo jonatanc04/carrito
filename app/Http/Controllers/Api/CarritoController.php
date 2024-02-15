@@ -91,4 +91,20 @@ class CarritoController extends Controller
         $carrito->delete();
         return response()->json($carrito);
     }
+
+    /**
+     * Elimina el carrito de compra y lo devuelve.
+     *
+     * @param  \App\Models\Carrito  $carrito
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmarPedido($idCliente)
+    {
+        $lineasCarrito = Carrito::where('idCliente', $idCliente)->get();
+        Carrito::where('idCliente', $idCliente)->delete();
+        return response()->json($lineasCarrito);
+    }
+
+
+
 }
